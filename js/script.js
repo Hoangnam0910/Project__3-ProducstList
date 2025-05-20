@@ -3,6 +3,7 @@ import { fetchApi } from "./fetchApi.js";
 const inputSearch = document.querySelector("#InputSearch");
 const BtnSearch = document.querySelector("#BtnSearch");
 const filter = document.querySelector("#filter");
+let currentCategory = null; //biến toàn cục
 
 // Category
 fetchApi("https://dummyjson.com/products").then((data) => {
@@ -26,10 +27,9 @@ fetchApi("https://dummyjson.com/products").then((data) => {
   });
 
   // Gán HTML vào div
-
   divCategory.innerHTML = htmls;
 
-  let currentCategory = null;
+  
   divCategory.querySelectorAll(".category-item").forEach((elem) => {
     elem.addEventListener("click", () => {
       const selectedCategory = elem.getAttribute("data-category");
@@ -47,16 +47,16 @@ fetchApi("https://dummyjson.com/products").then((data) => {
 // Hàm fetch và hiển thị sản phẩm theo category
 function showProductsByCategory(category) {
   fetchApi(
-    `https://dummyjson.com/products?category=${encodeURIComponent(category)}`
+    `https://dummyjson.com/products/category/${encodeURIComponent(category)}`
   ).then((data) => {
     const divProducts = document.querySelector("#Products-list");
-    if (data.length === 0) {
+    if (data.products.length === 0) {
       divProducts.innerHTML = "<p>Không tìm thấy sản phẩm nào</p>";
       return;
     }
 
     let htmls = "";
-    data.forEach((p) => {
+    data.products.forEach((p) => {
       htmls += `
         
           <div class="inner-item">
@@ -112,14 +112,14 @@ fetchApi("https://dummyjson.com/products").then((data) => {
 });
 
 //Hàm hiển thị sản phẩm
-function renderProducts(Products){
+function renderProducts(Products) {
   const divProducts = document.querySelector("#Products-list");
-  if(Products.length === 0) {
+  if (Products.length === 0) {
     divProducts.innerHTML = "<p>Không tìm thấy sản phẩm nào</p>";
     return;
   }
   let htmls = "";
-  Products.products.forEach((item) => {
+  Products.forEach((item) => {
     htmls += `
         
           <div class="inner-item">
@@ -139,19 +139,20 @@ function renderProducts(Products){
           </div>
         
       `;
-  })
-  
+  });
+
   divProducts.innerHTML = htmls;
 }
 // hàm tìm kiếm sản phẩm
 function searchProducts(keyword) {
-   // Lấy tất cả sản phẩm
+  // Lấy tất cả sản phẩm
   fetchApi("https://dummyjson.com/products").then((data) => {
     // Lọc các sản phẩm có chứa từ khóa trong các trường title, description, hoặc category
-    const filteredProducts = data.products.filter((product) =>
-      product.title.toLowerCase().includes(keyword.toLowerCase()) ||
-      product.description.toLowerCase().includes(keyword.toLowerCase()) ||
-      product.category.toLowerCase().includes(keyword.toLowerCase())
+    const filteredProducts = data.products.filter(
+      (product) =>
+        product.title.toLowerCase().includes(keyword.toLowerCase()) ||
+        product.description.toLowerCase().includes(keyword.toLowerCase()) ||
+        product.category.toLowerCase().includes(keyword.toLowerCase())
     );
     // Lọc sản phẩm theo từ khóa tìm kiếm trong tất cả các trường
     renderProducts(filteredProducts);
@@ -161,7 +162,7 @@ function searchProducts(keyword) {
 BtnSearch.addEventListener("click", () => {
   const keyword = inputSearch.value.trim();
   console.log(keyword);
-  if(!keyword){
+  if (!keyword) {
     alert("Vui lòng nhập từ khóa tìm kiếm");
     return;
   }
@@ -172,7 +173,6 @@ inputSearch.addEventListener("keydown", (e) => {
     BtnSearch.click();
   }
 });
-
 
 // hàm hiển thị tất cả sản phẩm khi click lại vào category
 function showAllProducts() {
@@ -210,24 +210,39 @@ function showAllProducts() {
 filter.addEventListener("change", async function () {
   const sortType = this.value;
   console.log(sortType);
-
-  // lấy dữ liệu từ API
-  let products = await fetchApi("https://dummyjson.com/products");
-
-  // sắp xếp giá trị lựa chọn
-  if(sortType === "asc"){
-    products.products.sort((a,b) => a.price - b.price);
-  } else if(sortType === "desc"){
-    products.products.sort((a,b) => b.price - a.price);
-  } else if(sortType === "Sale"){
-    products.products.sort((a,b) => b.discountPercentage - a.discountPercentage);
-  }else if(sortType === "Default"){
-    renderProducts(products);
+  
+  // sort theo điều kiện
+  // nếu đang ở category nào thì sort theo category đó
+  if(currentCategory){
+    fetchApi(`https://dummyjson.com/products/category/${encodeURIComponent(currentCategory)}`)
+      .then((data) => {
+        let products = data.products;
+        sortAndRender(products, sortType);
+      });
   }
+  // không thì sort tất cả
   else{
-    return;
+    fetchApi("https://dummyjson.com/products").then((data) => {
+      let products = data.products;
+      sortAndRender(products, sortType);
+    });
   }
-
-  renderProducts(products);
+  // hàm sort
+  function sortAndRender(products, sortType){
+    if (sortType === "asc") {
+      products.sort((a, b) => a.price - b.price);
+    } else if (sortType === "desc") {
+      products.sort((a, b) => b.price - a.price);
+    } else if (sortType === "Sale") {
+      products.sort(
+        (a, b) => b.discountPercentage - a.discountPercentage
+      );
+    } else if (sortType === "Default") {
+      renderProducts(products);
+    } else {
+      return;
+    }
+     renderProducts(products)
+  };
 });
 // End sortProducts
