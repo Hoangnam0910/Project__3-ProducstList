@@ -5,10 +5,10 @@ const BtnSearch = document.querySelector("#BtnSearch");
 const filter = document.querySelector("#filter");
 
 // Category
-fetchApi('https://dummyjson.com/products').then((data) => {
+fetchApi("https://dummyjson.com/products").then((data) => {
   // console.log(data);
   // Lấy ra mảng category từ data
-  const categories = data.map((item) => item.category);
+  const categories = data.products.map((item) => item.category);
   const divCategory = document.querySelector("#category");
 
   // Dùng Set để loại bỏ trùng lặp
@@ -83,10 +83,10 @@ function showProductsByCategory(category) {
 
 // Products List
 // phần hiển thị sản phẩm
-fetchApi('https://dummyjson.com/products').then((data) => {
+fetchApi("https://dummyjson.com/products").then((data) => {
   // console.log(data);
   let htmls = "";
-  data.forEach((item) => {
+  data.products.forEach((item) => {
     htmls += `
         
           <div class="inner-item">
@@ -119,7 +119,7 @@ function renderProducts(Products){
     return;
   }
   let htmls = "";
-  Products.forEach((item) => {
+  Products.products.forEach((item) => {
     htmls += `
         
           <div class="inner-item">
@@ -146,9 +146,9 @@ function renderProducts(Products){
 // hàm tìm kiếm sản phẩm
 function searchProducts(keyword) {
    // Lấy tất cả sản phẩm
-  fetchApi('https://dummyjson.com/products').then((data) => {
+  fetchApi("https://dummyjson.com/products").then((data) => {
     // Lọc các sản phẩm có chứa từ khóa trong các trường title, description, hoặc category
-    const filteredProducts = data.filter((product) =>
+    const filteredProducts = data.products.filter((product) =>
       product.title.toLowerCase().includes(keyword.toLowerCase()) ||
       product.description.toLowerCase().includes(keyword.toLowerCase()) ||
       product.category.toLowerCase().includes(keyword.toLowerCase())
@@ -176,10 +176,10 @@ inputSearch.addEventListener("keydown", (e) => {
 
 // hàm hiển thị tất cả sản phẩm khi click lại vào category
 function showAllProducts() {
-  fetchApi('https://dummyjson.com/products').then((data) => {
+  fetchApi("https://dummyjson.com/products").then((data) => {
     console.log(data);
     let htmls = "";
-    data.forEach((item) => {
+    data.products.forEach((item) => {
       htmls += `
         
           <div class="inner-item">
@@ -212,15 +212,15 @@ filter.addEventListener("change", async function () {
   console.log(sortType);
 
   // lấy dữ liệu từ API
-  let products = await fetchApi('https://dummyjson.com/products');
+  let products = await fetchApi("https://dummyjson.com/products");
 
   // sắp xếp giá trị lựa chọn
   if(sortType === "asc"){
-    products.sort((a,b) => a.price - b.price);
+    products.products.sort((a,b) => a.price - b.price);
   } else if(sortType === "desc"){
-    products.sort((a,b) => b.price - a.price);
+    products.products.sort((a,b) => b.price - a.price);
   } else if(sortType === "Sale"){
-    products.sort((a,b) => b.discountPercentage - a.discountPercentage);
+    products.products.sort((a,b) => b.discountPercentage - a.discountPercentage);
   }else if(sortType === "Default"){
     renderProducts(products);
   }
