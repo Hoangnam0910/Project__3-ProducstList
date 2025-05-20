@@ -5,7 +5,7 @@ const BtnSearch = document.querySelector("#BtnSearch");
 const filter = document.querySelector("#filter");
 
 // Category
-fetchApi("http://localhost:3000/products").then((data) => {
+fetchApi('https://dummyjson.com/products').then((data) => {
   // console.log(data);
   // Lấy ra mảng category từ data
   const categories = data.map((item) => item.category);
@@ -47,7 +47,7 @@ fetchApi("http://localhost:3000/products").then((data) => {
 // Hàm fetch và hiển thị sản phẩm theo category
 function showProductsByCategory(category) {
   fetchApi(
-    `http://localhost:3000/products?category=${encodeURIComponent(category)}`
+    `https://dummyjson.com/products?category=${encodeURIComponent(category)}`
   ).then((data) => {
     const divProducts = document.querySelector("#Products-list");
     if (data.length === 0) {
@@ -83,7 +83,7 @@ function showProductsByCategory(category) {
 
 // Products List
 // phần hiển thị sản phẩm
-fetchApi("http://localhost:3000/products").then((data) => {
+fetchApi('https://dummyjson.com/products').then((data) => {
   // console.log(data);
   let htmls = "";
   data.forEach((item) => {
@@ -146,7 +146,7 @@ function renderProducts(Products){
 // hàm tìm kiếm sản phẩm
 function searchProducts(keyword) {
    // Lấy tất cả sản phẩm
-  fetchApi("http://localhost:3000/products").then((data) => {
+  fetchApi('https://dummyjson.com/products').then((data) => {
     // Lọc các sản phẩm có chứa từ khóa trong các trường title, description, hoặc category
     const filteredProducts = data.filter((product) =>
       product.title.toLowerCase().includes(keyword.toLowerCase()) ||
@@ -176,7 +176,7 @@ inputSearch.addEventListener("keydown", (e) => {
 
 // hàm hiển thị tất cả sản phẩm khi click lại vào category
 function showAllProducts() {
-  fetchApi("http://localhost:3000/products").then((data) => {
+  fetchApi('https://dummyjson.com/products').then((data) => {
     console.log(data);
     let htmls = "";
     data.forEach((item) => {
@@ -212,7 +212,7 @@ filter.addEventListener("change", async function () {
   console.log(sortType);
 
   // lấy dữ liệu từ API
-  let products = await fetchApi("http://localhost:3000/products");
+  let products = await fetchApi('https://dummyjson.com/products');
 
   // sắp xếp giá trị lựa chọn
   if(sortType === "asc"){
