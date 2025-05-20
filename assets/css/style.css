@@ -1,0 +1,71 @@
+/* category */
+.category{
+    display: flex;
+    justify-content: space-around;
+}
+.category .category-item{
+    background-color: var(--color-yellow);
+    width: 23%;
+    text-align: center;
+    border-radius: 8px;
+    padding: 20px 0;
+}
+/* End category */
+
+
+/* Producst */
+.Products-list .inner-products{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+.Products-list .inner-item{
+    width: 18%;
+    background-color: antiquewhite;
+    margin-bottom: 1.5%;
+    
+}
+.Products-list .inner-item .inner-img{
+    position: relative;
+}
+.Products-list .inner-item .inner-img img{
+    width: 100%;
+}
+.Products-list .inner-item .inner-img span{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: var(--color-yellow);
+    border-radius: 10px;
+    padding: 6px;
+    font-size: 13px;
+    font-weight: bold;
+}
+.Products-list .inner-item .inner-title{
+    padding: 0 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    
+}
+.Products-list .inner-item .inner-title h3{
+    font-size:18px;
+    
+}
+.Products-list .inner-item .inner-price{
+    padding: 0 10px;
+    display: flex;
+    justify-content: space-between;
+}
+.Products-list .inner-item .inner-price p{
+    margin: 0;
+}
+
+
+/* End Producst */
